@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>cookie</title>
+</head>
+<body >
+<button onclick="checkCookie()">登录</button>
+
+</body>
+</html>
+<script type="text/javascript">
+
+//*************************************************************************创建一个可在 cookie 变量中存储访问者姓名的函数：
+//  (点击"登录"的时候可以调用)    传入用户名
+    function setCookie(c_name,value,expiredays)   //存储访问者姓名   cookie 的名称、值以及过期天数
+    {
+        var oDate=new Date()
+        oDate.setDate(oDate.getDate()+expiredays)  //设置时间 表示到多少天之后保存的密码过期
+
+        //将 cookie 名称、值及其过期日期存入 document.cookie 对象
+        var exp=";expires="+oDate.toGMTString();
+
+        document.cookie=c_name+ "=" +escape(value)+((expiredays==null) ? "" :exp)
+  //c_name:cookie 的名称 =  escape(value):解码函数      天数为空?"" :exp
+
+        //cookie默认是临时存储的，当浏览器关闭进程的时候自动销毁。如果我们想长时间存放cookie，
+        // 需要在设置的时候，给她设置一个过期的时间。格式：documnet.cookie=名称+‘=’+值+‘；expirse=’+时间；
+        // （这个时间必须是一个字符串形式的，比如说我们声明一个日期：var oDate=new Date() 将其转化为字符串的方式是：oDate.toGMTString()）
+
+    }
+
+//**************************************************************************************************检查是否已设置 cookie：
+    function getCookie(c_name)    //得到用户名
+    {
+        if (document.cookie.length>0)     //判断cooki是否存在
+        {
+//            console.log(document.cookie)  //比如输入ss  返回username=ss
+            c_start=document.cookie.indexOf(c_name + "=")  //判断是不是有username=
+//            console.log(c_start)   //返回0
+
+            if (c_start!=-1)   //说明有
+            {
+                c_start=c_start + c_name.length+1         //c_start=0+8+1   cookie 的名称的索引+用户名的长度+1
+                c_end=document.cookie.indexOf(";",c_start) //从 c_start开始往后找到;
+                if (c_end==-1) c_end=document.cookie.length    //没有;  c_end=总长度
+                return unescape(document.cookie.substring(c_start,c_end))//将用户输入的用户名返回出去  document.cookie返回值是username=ss 要找到ss 解码return出去
+
+            }
+        }
+        return ""     //没有取到返回空
+    }
+
+//***************************************************************************************************
+    function checkCookie()               //检查是否有cookie
+    {
+        username=getCookie('username')            //获取用户名
+        if (username!=null && username!="")         //如果原来就有用户名  欢迎词
+        {alert('Welcome again '+username+'!')}
+        else
+        {
+            username=prompt('Please enter your name:',"")  //如果没有用户名  请输入
+//            console.log(username)    //prompt:的返回值是输入的值
+            if (username!=null && username!="")   //如果用户名不等于空
+            {
+                setCookie('username',username,1)    //获取用户名    设置要保存的时间
+            }
+        }
+    }
+</script>
